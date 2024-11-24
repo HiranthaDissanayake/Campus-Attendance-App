@@ -48,4 +48,14 @@ class UserServices {
     }
 
   }
+
+
+  // method to check whether the username is saved in the shared pref
+  static Future<bool> checkUsername() async{
+    // create an instance for shared pref
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? username = prefs.getString('username');
+    return username != null;
+  }
+
 }

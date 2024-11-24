@@ -1,6 +1,6 @@
 import 'package:attendenz/constants/colors.dart';
 import 'package:attendenz/screens/main_screen.dart';
-import 'package:attendenz/screens/user_services.dart';
+import 'package:attendenz/services/user_services.dart';
 import 'package:attendenz/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 

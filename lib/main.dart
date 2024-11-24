@@ -1,4 +1,5 @@
-import 'package:attendenz/screens/onboarding_screen.dart';
+import 'package:attendenz/services/user_services.dart';
+import 'package:attendenz/widgets/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,12 +15,27 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        textTheme: GoogleFonts.outfitTextTheme(),
-      ),
-      home: OnboardingScreen(),
-    );
+    return FutureBuilder(
+      future: UserServices.checkUsername(),
+      builder: (context, snapshot) {
+        
+        // if the snapshot is still waiting
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return const CircularProgressIndicator();
+        }else{
+
+          //here the hasUserName will be set to true of the data is their in the snapshot
+          bool hasUserName = snapshot.data ?? false;
+
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              textTheme: GoogleFonts.outfitTextTheme(),
+            ),
+            home: Wrapper(showMainScreen: hasUserName),
+          );
+        }
+      },
+      );
   }
 }
