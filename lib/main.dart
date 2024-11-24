@@ -1,3 +1,4 @@
+import 'package:attendenz/screens/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,10 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.outfitTextTheme(),
       ),
-      home: Scaffold(
-        backgroundColor: Colors.white,
-        body: Text("Hello",style: GoogleFonts.outfit(),),
-      ),
+      home: OnboardingScreen(),
     );
   }
 }
