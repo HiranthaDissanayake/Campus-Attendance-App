@@ -1,4 +1,6 @@
 import 'package:attendenz/constants/colors.dart';
+import 'package:attendenz/screens/main_screen.dart';
+import 'package:attendenz/screens/user_services.dart';
 import 'package:attendenz/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
@@ -66,6 +68,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
                     if(value!.isEmpty){
                       return "Please Enter a valid Name";
                     }
+                    return null;
                   },
                   decoration: InputDecoration(
                     hintText: "Name",
@@ -88,6 +91,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
                     if(value!.isEmpty){
                       return "Please Enter a valid Email";
                     }
+                    return null;
                   },
                   decoration: InputDecoration(
                     hintText: "Email",
@@ -110,6 +114,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
                     if(value!.isEmpty){
                       return "Please Enter a valid Password";
                     }
+                    return null;
                   },
                   obscureText: true,
                   decoration: InputDecoration(
@@ -133,6 +138,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
                     if(value!.isEmpty){
                       return "Please Enter the same password";
                     }
+                    return null;
                   },
                   obscureText: true,
                   decoration: InputDecoration(
@@ -176,7 +182,7 @@ class _UserDataScreenState extends State<UserDataScreen> {
 
                       // submit button
                       GestureDetector(
-                        onTap: (){
+                        onTap: () async{
                           if(_formKey.currentState!.validate()){
                             // form is valid, process data
 
@@ -185,7 +191,24 @@ class _UserDataScreenState extends State<UserDataScreen> {
                             String password = _passwordController.text;
                             String confirmPassword = _confirmPasswordController.text;
 
-                            print("$userName $email $password $confirmPassword");
+                            // save the user details in the device storage
+                            await UserServices.storeUserDetails(
+                              userName: userName,
+                              email: email,
+                              password: password,
+                              confirmPassword: confirmPassword,
+                              context: context
+                              );
+
+                              if (password != confirmPassword){
+                                return;
+                              }else{
+                                // navigate to the main screen
+                              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                return const MainScreen();
+                              },));
+                              }
+                              
                           }
                         },
                         child: const CustomButton(
