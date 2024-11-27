@@ -20,6 +20,7 @@ class _MainScreenState extends State<MainScreen> {
 
     // screens list
     final List<Widget> pages = [
+      AddNewScreen(),
       HomeScreen(),
       AddNewScreen(),
       ChartScreen()
