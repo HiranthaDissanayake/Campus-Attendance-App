@@ -1,7 +1,9 @@
 import 'package:attendenz/constants/colors.dart';
+import 'package:attendenz/models/subjectCategory.dart';
 import 'package:attendenz/screens/add_new_screen.dart';
 import 'package:attendenz/screens/chart_screen.dart';
 import 'package:attendenz/screens/home_screen.dart';
+import 'package:attendenz/services/present_services.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -15,14 +17,41 @@ class _MainScreenState extends State<MainScreen> {
 
   int _currentPageIndex = 0;
 
+  List<Subject> subjectList = [];
+
+  // function to fetch subjects
+  void fetchAllSubjects() async{
+    List<Subject> loadedSubjects = await PresentServices().loadPresents();
+    setState(() {
+      subjectList = loadedSubjects;
+    });
+  }
+
+  // add new subject
+  void addNewAttendence (Subject newAttendence){
+    PresentServices().savePresents(newAttendence, context);
+
+    // update the list of attendence
+    setState(() {
+      subjectList.add(newAttendence);
+    });
+  }
+
+  @override
+  void initState() {
+    setState(() {
+      fetchAllSubjects();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
 
     // screens list
     final List<Widget> pages = [
-      AddNewScreen(),
+      AddNewScreen(addSubject: addNew),
       HomeScreen(),
-      AddNewScreen(),
       ChartScreen()
     ];
 
