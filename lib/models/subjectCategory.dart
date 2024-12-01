@@ -29,7 +29,6 @@ final Map<Subjectcategory, Color> SubjectcategoryColors={
 
 class Subject{
   final int id;
-  final String title;
   final DateTime date;
   final Subjectcategory category;
   final DateTime time;
@@ -38,11 +37,38 @@ class Subject{
 
   Subject({
     required this.id,
-    required this.title,
     required this.date,
     required this.category,
     required this.time,
     required this.reason,
     required this.medical
     });
+
+
+    //converts the expense object to a JSON object
+    Map <String, dynamic> toJSON(){
+      return{
+        'id': id,
+        'date': date.toIso8601String(),
+        'category': category.index,
+        'time': time.toIso8601String(),
+        'reason': reason,
+        'medical': medical
+      };
+    }
+
+
+    //create an expense object from a JSON object
+    factory Subject.fromJSON(Map<String, dynamic> json){
+      return Subject(
+        id: json['id'],
+        date: DateTime.parse(json['date']),
+        category: Subjectcategory.values[json['category']],
+        time: DateTime.parse(json['time']),
+        reason: json['reason'],
+        medical: json['medical']
+        );
+    }
+
+
 } 

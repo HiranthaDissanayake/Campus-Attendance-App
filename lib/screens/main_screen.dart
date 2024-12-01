@@ -3,6 +3,7 @@ import 'package:attendenz/models/subjectCategory.dart';
 import 'package:attendenz/screens/add_new_screen.dart';
 import 'package:attendenz/screens/chart_screen.dart';
 import 'package:attendenz/screens/home_screen.dart';
+import 'package:attendenz/services/absent_services.dart';
 import 'package:attendenz/services/present_services.dart';
 import 'package:flutter/material.dart';
 
@@ -17,30 +18,51 @@ class _MainScreenState extends State<MainScreen> {
 
   int _currentPageIndex = 0;
 
-  List<Subject> subjectList = [];
+  List<Subject> presentList = [];
+  List<Subject> absentList = [];
 
-  // function to fetch subjects
-  void fetchAllSubjects() async{
+  // function to fetch presents
+  void fetchAllPresents() async{
     List<Subject> loadedSubjects = await PresentServices().loadPresents();
     setState(() {
-      subjectList = loadedSubjects;
+      presentList = loadedSubjects;
     });
   }
 
-  // add new subject
-  void addNewAttendence (Subject newAttendence){
-    PresentServices().savePresents(newAttendence, context);
-
-    // update the list of attendence
+  // function to fetch absents
+  void fetchAllAbsents() async{
+    List<Subject> loadedAbsents = await AbsentServices().loadAbsents();
     setState(() {
-      subjectList.add(newAttendence);
+      absentList = loadedAbsents;
+    });
+  }
+
+  // add new present
+  void addNewPresent (Subject newPresent){
+    PresentServices().savePresents(newPresent, context);
+
+    // update the list of presents
+    setState(() {
+      presentList.add(newPresent);
+    });
+  }
+
+  // add new absent
+  void addNewAbsent (Subject newAbsent){
+    AbsentServices().saveAbsent(newAbsent, context);
+
+    // update the list of absents
+    setState(() {
+      absentList.add(newAbsent);
+      print(presentList.length);
     });
   }
 
   @override
   void initState() {
     setState(() {
-      fetchAllSubjects();
+      fetchAllPresents();
+      fetchAllAbsents();
     });
     super.initState();
   }
@@ -50,7 +72,7 @@ class _MainScreenState extends State<MainScreen> {
 
     // screens list
     final List<Widget> pages = [
-      AddNewScreen(addSubject: addNew),
+      AddNewScreen(addPresent: addNewPresent, addAbsent: addNewAbsent),
       HomeScreen(),
       ChartScreen()
     ];

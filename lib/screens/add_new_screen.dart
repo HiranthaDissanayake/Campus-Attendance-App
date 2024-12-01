@@ -1,11 +1,21 @@
 import 'package:attendenz/constants/colors.dart';
 import 'package:attendenz/models/subjectCategory.dart';
+import 'package:attendenz/services/absent_services.dart';
+import 'package:attendenz/services/present_services.dart';
 import 'package:attendenz/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class AddNewScreen extends StatefulWidget {
-  const AddNewScreen({super.key});
+
+  final Function(Subject) addPresent;
+  final Function(Subject) addAbsent;
+
+  const AddNewScreen({
+    super.key,
+    required this.addPresent,
+    required this.addAbsent,
+    });
 
   @override
   State<AddNewScreen> createState() => _AddNewScreenState();
@@ -17,6 +27,7 @@ class _AddNewScreenState extends State<AddNewScreen> {
   int _selectedMethod = 0;
   Subjectcategory _subjectCategory = Subjectcategory.subject1;
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _reasonController = TextEditingController();
 
   DateTime _selectedDate = DateTime.now();
   DateTime _selectedTime = DateTime.now();
@@ -29,6 +40,7 @@ class _AddNewScreenState extends State<AddNewScreen> {
   }
 
   @override
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _selectedMethod == 0 ? presentColor : absentColor,
@@ -358,9 +370,58 @@ class _AddNewScreenState extends State<AddNewScreen> {
                           height: 30,
                         ),
 
-                        CustomButton(
-                          buttonName: "ADD",
-                          buttonColor: _selectedMethod == 0 ? presentColor : absentColor,
+                        GestureDetector(
+                          onTap: () async{
+
+                            // Save the present or absent shared pref
+
+                            if(_selectedMethod == 0){
+                              
+                            List<Subject> loadedSubjects = await PresentServices().loadPresents();
+
+                            // create the subject to store
+                            Subject subject = Subject(
+                              id: loadedSubjects.length + 1,
+                              date: _selectedDate,
+                              category: _subjectCategory,
+                              time: _selectedTime,
+                              reason: _reasonController.text,
+                              medical: _descriptionController.text
+                              );
+
+                            // add subject
+                            widget.addPresent(subject);
+
+                            // clear the feilds
+                            _reasonController.clear();
+                            _descriptionController.clear();
+                            }
+                            else{
+                              // load absents
+                              List<Subject> loadedAbsents = await AbsentServices().loadAbsents();
+
+                              // create the new absent
+                              Subject absent = Subject(
+                                id: loadedAbsents.length + 1,
+                                date: _selectedDate,
+                                category: _subjectCategory,
+                                time: _selectedTime,
+                                reason: _reasonController.text,
+                                medical: _descriptionController.text
+                                );
+
+                              widget.addAbsent(absent);
+
+                              // clear the feilds 
+                            _reasonController.clear();
+                            _descriptionController.clear();
+
+                            }
+                          },
+                          child: CustomButton(
+                            buttonName: "ADD",
+                            buttonColor: _selectedMethod == 0 ? presentColor : absentColor,
+                          ),
                         )
                       ],
                     ),
