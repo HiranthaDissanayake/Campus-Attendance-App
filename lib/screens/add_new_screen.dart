@@ -115,10 +115,10 @@ class _AddNewScreenState extends State<AddNewScreen> {
                   margin: EdgeInsets.only(
                     top: MediaQuery.of(context).size.height * 0.1,
                   ),
-                  child: _selectedMethod == 0 ? const Column(
+                  child: _selectedMethod == 0 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("How is Today ? ",
+                      const Text("How is Today ? ",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 22,
@@ -127,21 +127,22 @@ class _AddNewScreenState extends State<AddNewScreen> {
                       ),
                   
                       TextField(
-                        decoration: InputDecoration(
+                        controller: _reasonController,
+                        decoration: const InputDecoration(
                           hintText: "your idea...",
                           border: InputBorder.none
                         ),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 25,
                           color: Colors.white,
                           fontWeight: FontWeight.bold
                         ),
                       )
                     ],
-                  ) : const Column(
+                  ) : Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("What is the Reason ? ",
+                      const Text("What is the Reason ? ",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 22,
@@ -150,11 +151,12 @@ class _AddNewScreenState extends State<AddNewScreen> {
                       ),
                   
                       TextField(
-                        decoration: InputDecoration(
+                        controller: _reasonController,
+                        decoration: const InputDecoration(
                           hintText: "Reason...",
                           border: InputBorder.none
                         ),
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 25,
                           color: Colors.white,
                           fontWeight: FontWeight.bold
@@ -218,7 +220,7 @@ class _AddNewScreenState extends State<AddNewScreen> {
                         TextFormField(
                           controller: _descriptionController,
                           decoration: InputDecoration(
-                            hintText: "Description",
+                            hintText: _selectedMethod == 0 ? "Add some note" : "Details about medical",
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(100)
                             )

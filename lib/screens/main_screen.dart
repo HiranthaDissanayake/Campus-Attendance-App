@@ -1,6 +1,7 @@
 import 'package:attendenz/constants/colors.dart';
 import 'package:attendenz/models/subjectCategory.dart';
 import 'package:attendenz/screens/add_new_screen.dart';
+import 'package:attendenz/screens/attendences_screen.dart';
 import 'package:attendenz/screens/chart_screen.dart';
 import 'package:attendenz/screens/home_screen.dart';
 import 'package:attendenz/services/absent_services.dart';
@@ -30,6 +31,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   // function to fetch absents
+
   void fetchAllAbsents() async{
     List<Subject> loadedAbsents = await AbsentServices().loadAbsents();
     setState(() {
@@ -58,6 +60,15 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  // function to remove a absent
+
+  void removeAbsent(Subject absent){
+    AbsentServices().deleteAbsent(absent.id, context);
+    setState(() {
+      absentList.remove(absent);
+    });
+  }
+
   @override
   void initState() {
     setState(() {
@@ -72,6 +83,10 @@ class _MainScreenState extends State<MainScreen> {
 
     // screens list
     final List<Widget> pages = [
+      AttendencesScreen(
+        absentList: absentList,
+        onDismissedAbsent: removeAbsent,
+      ),
       AddNewScreen(addPresent: addNewPresent, addAbsent: addNewAbsent),
       HomeScreen(),
       ChartScreen()
@@ -99,6 +114,11 @@ class _MainScreenState extends State<MainScreen> {
             label: "Home",
           ),
 
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: "Attendences",
+          ),
+
           BottomNavigationBarItem(
             icon: Container(
               decoration: const BoxDecoration(
@@ -112,6 +132,11 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ),
             label: "",
+          ),
+
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "Home",
           ),
 
           const BottomNavigationBarItem(

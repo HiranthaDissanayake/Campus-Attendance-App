@@ -68,4 +68,51 @@ class AbsentServices{
 
     return loadedAbsents;
   }
+
+  // delete the absent card
+  Future <void> deleteAbsent(int id, BuildContext context) async{
+    try{
+
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      List<String>? existingAbsents = pref.getStringList(_absentKey);
+
+      // convert the existing absents to a list of absent objects
+      List <Subject> existingAbsentObject = [];
+
+      if(existingAbsents != null){
+       existingAbsentObject = existingAbsents
+          .map((e) => Subject.fromJSON(json.decode(e)))
+          .toList();
+      }
+
+      // Remove the absent with the specified id from the list
+      existingAbsentObject.removeWhere((absent) => absent.id == id);
+
+      // convert the list of absents objects back to a list of strings
+      List<String> updatedAbsents = existingAbsentObject
+            .map((e) => json.encode(e.toJSON()))
+            .toList();
+
+      // save the updated absent list
+      await pref.setStringList(_absentKey, updatedAbsents);
+
+      // show snackbar
+      if(context.mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Absent data deleted successfully!"),
+          duration: Duration(seconds: 2),
+          )
+        );
+      }
+
+    }catch(error){
+      if(context.mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Error deleting absent details"),
+          duration: Duration(seconds: 2),
+          )
+        );
+      }
+    }
+  }
 }
