@@ -74,4 +74,51 @@ class PresentServices {
     return loadSubjects;
   }
 
+  // delete the present card
+  Future <void> deletePresent(int id, BuildContext context) async{
+    try{
+
+      SharedPreferences pref = await SharedPreferences.getInstance();
+      List<String>? existingPresents = pref.getStringList(_presentKey);
+
+      // convert the existing presents to a list of absent objects
+      List <Subject> existingPresentObject = [];
+
+      if(existingPresents != null){
+       existingPresentObject = existingPresents
+          .map((e) => Subject.fromJSON(json.decode(e)))
+          .toList();
+      }
+
+      // Remove the present with the specified id from the list
+      existingPresentObject.removeWhere((present) => present.id == id);
+
+      // convert the list of present objects back to a list of strings
+      List<String> updatedPresents = existingPresentObject
+            .map((e) => json.encode(e.toJSON()))
+            .toList();
+
+      // save the updated present list
+      await pref.setStringList(_presentKey, updatedPresents);
+
+      // show snackbar
+      if(context.mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Present data deleted successfully!"),
+          duration: Duration(seconds: 2),
+          )
+        );
+      }
+
+    }catch(error){
+      if(context.mounted){
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Error deleting Present details"),
+          duration: Duration(seconds: 2),
+          )
+        );
+      }
+    }
+  }
+
 }

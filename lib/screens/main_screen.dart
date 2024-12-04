@@ -69,6 +69,13 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  void removePresent(Subject present){
+    PresentServices().deletePresent(present.id, context);
+    setState(() {
+      presentList.remove(present);
+    });
+  }
+
   @override
   void initState() {
     setState(() {
@@ -86,6 +93,8 @@ class _MainScreenState extends State<MainScreen> {
       AttendencesScreen(
         absentList: absentList,
         onDismissedAbsent: removeAbsent,
+        presentList: presentList,
+        onDismissedPresent: removePresent,
       ),
       AddNewScreen(addPresent: addNewPresent, addAbsent: addNewAbsent),
       HomeScreen(),

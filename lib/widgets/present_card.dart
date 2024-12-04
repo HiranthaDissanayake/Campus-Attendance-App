@@ -3,13 +3,13 @@ import 'package:attendenz/models/subjectCategory.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class AbsentCard extends StatelessWidget {
+class PresentCard extends StatelessWidget {
   final String reason;
   final DateTime date;
   final String medical;
   final Subjectcategory category;
   final DateTime time;
-  const AbsentCard({
+  const PresentCard({
     super.key,
     required this.reason,
     required this.date,
