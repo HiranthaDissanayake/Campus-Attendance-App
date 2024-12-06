@@ -63,6 +63,9 @@ class _AttendencesScreenState extends State<AttendencesScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
+                      widget.absentList.isEmpty ? const Text("No Absents Yet",
+                       style: TextStyle(color: Colors.grey),
+                      ) :
                       ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
@@ -116,6 +119,9 @@ class _AttendencesScreenState extends State<AttendencesScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
+                      widget.presentList.isEmpty? const Text("No Presents Yet",
+                        style: TextStyle(color: Colors.grey),
+                      ):
                       ListView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,

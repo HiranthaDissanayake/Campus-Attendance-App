@@ -1,10 +1,22 @@
 import 'package:attendenz/constants/colors.dart';
+import 'package:attendenz/models/subjectCategory.dart';
 import 'package:attendenz/services/user_services.dart';
+import 'package:attendenz/widgets/absent_card.dart';
+import 'package:attendenz/widgets/line_chart.dart';
 import 'package:attendenz/widgets/present_absent_card.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+
+
+  final List<Subject> presentList;
+  final List<Subject> absentList;
+
+  const HomeScreen({
+    super.key,
+    required this.absentList,
+    required this.presentList
+    });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -36,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           // main column
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 width: double.infinity,
@@ -64,21 +77,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       ), 
                     ),
 
-                    const Padding(
-                      padding:  EdgeInsets.all(35),
+                    Padding(
+                      padding:  const EdgeInsets.all(35),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           PresentAbsentCard(
                             title: "Presents",
-                            total: 50,
+                            total: widget.presentList.length.toDouble(),
                             bgColor: presentColor,
                             bIcon: Icons.perm_contact_cal_rounded,
                             ),
                           
                           PresentAbsentCard(
                             title: "Absents",
-                            total: 3,
+                            total: widget.absentList.length.toDouble(),
                             bgColor: absentColor,
                             bIcon: Icons.person_off_rounded,
                             ),
@@ -87,8 +100,73 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   ],
                 ),
-              )
+              ),
+
+              // line Chart
+              const Padding(padding: 
+                EdgeInsets.all(15),
+
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Daily Attendences", style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500
+                    ),),
+
+                    SizedBox(
+                      height: 20,
+                    ),
+
+                    LineChartSample(),
+                  ],
+                ),
+              ),
               
+              // recent attendence
+
+              Padding(padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Recent Absents",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500
+                    ),
+                    ),
+
+                    const SizedBox(
+                      height: 20,
+                    ),
+
+                    Column(
+                      children: [
+                       widget.absentList.isEmpty ? const Text("No Absents Yet",
+                       style: TextStyle(color: Colors.grey),
+                       ):
+                       ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: widget.absentList.length,
+                        itemBuilder: (context, index){
+                          final absent = widget.absentList[index];
+
+                          return AbsentCard(
+                            reason: absent.reason,
+                            date: absent.date,
+                            medical: absent.medical,
+                            category: absent.category,
+                            time: absent.time
+                            );
+                        },
+                      )
+                      ],
+                    )
+                  ],
+                ),
+              )
             ],
           ),
         )

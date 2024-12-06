@@ -4,6 +4,7 @@ import 'package:attendenz/screens/add_new_screen.dart';
 import 'package:attendenz/screens/attendences_screen.dart';
 import 'package:attendenz/screens/chart_screen.dart';
 import 'package:attendenz/screens/home_screen.dart';
+import 'package:attendenz/screens/profile_screen.dart';
 import 'package:attendenz/services/absent_services.dart';
 import 'package:attendenz/services/present_services.dart';
 import 'package:flutter/material.dart';
@@ -90,6 +91,10 @@ class _MainScreenState extends State<MainScreen> {
 
     // screens list
     final List<Widget> pages = [
+      HomeScreen(
+        absentList: absentList,
+        presentList: presentList,
+        ),
       AttendencesScreen(
         absentList: absentList,
         onDismissedAbsent: removeAbsent,
@@ -97,8 +102,9 @@ class _MainScreenState extends State<MainScreen> {
         onDismissedPresent: removePresent,
       ),
       AddNewScreen(addPresent: addNewPresent, addAbsent: addNewAbsent),
-      HomeScreen(),
-      ChartScreen()
+      
+      ChartScreen(),
+      ProfileScreen(),
     ];
 
     return Scaffold(
@@ -144,13 +150,13 @@ class _MainScreenState extends State<MainScreen> {
           ),
 
           const BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Home",
+            icon: Icon(Icons.insert_chart_outlined_sharp),
+            label: "View Chart",
           ),
 
           const BottomNavigationBarItem(
-            icon: Icon(Icons.insert_chart_outlined_sharp),
-            label: "View Chart",
+            icon: Icon(Icons.person),
+            label: "Profile",
           ),
         ]
         ),
