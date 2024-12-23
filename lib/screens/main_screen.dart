@@ -2,9 +2,7 @@ import 'package:attendenz/constants/colors.dart';
 import 'package:attendenz/models/subjectCategory.dart';
 import 'package:attendenz/screens/add_new_screen.dart';
 import 'package:attendenz/screens/attendences_screen.dart';
-import 'package:attendenz/screens/chart_screen.dart';
 import 'package:attendenz/screens/home_screen.dart';
-import 'package:attendenz/screens/profile_screen.dart';
 import 'package:attendenz/services/absent_services.dart';
 import 'package:attendenz/services/present_services.dart';
 import 'package:flutter/material.dart';
@@ -86,25 +84,45 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
   }
 
+  // category total absents
+
+  Map<Subjectcategory, double> calculateAbsentCategories() {
+    Map<Subjectcategory, double> categoryTotals = {
+      Subjectcategory.subject1: 0,
+      Subjectcategory.subject2: 0,
+      Subjectcategory.subject3: 0,
+      Subjectcategory.subject4: 0,
+      Subjectcategory.subject5: 0,
+    };
+
+    for(Subject subject in absentList){
+      categoryTotals[subject.category] = 
+          categoryTotals[subject.category]! + absentList.length.toDouble();
+    }
+
+    return categoryTotals;
+  }
+
   @override
   Widget build(BuildContext context) {
 
     // screens list
-    final List<Widget> pages = [
+    final List<Widget> pages = [ 
       HomeScreen(
         absentList: absentList,
         presentList: presentList,
         ),
+
+      AddNewScreen(addPresent: addNewPresent, addAbsent: addNewAbsent),  
+
       AttendencesScreen(
         absentList: absentList,
         onDismissedAbsent: removeAbsent,
         presentList: presentList,
         onDismissedPresent: removePresent,
       ),
-      AddNewScreen(addPresent: addNewPresent, addAbsent: addNewAbsent),
       
-      ChartScreen(),
-      ProfileScreen(),
+      
     ];
 
     return Scaffold(
@@ -129,12 +147,7 @@ class _MainScreenState extends State<MainScreen> {
             label: "Home",
           ),
 
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: "Attendences",
-          ),
-
-          BottomNavigationBarItem(
+           BottomNavigationBarItem(
             icon: Container(
               decoration: const BoxDecoration(
                 color: MainColor,
@@ -150,14 +163,11 @@ class _MainScreenState extends State<MainScreen> {
           ),
 
           const BottomNavigationBarItem(
-            icon: Icon(Icons.insert_chart_outlined_sharp),
-            label: "View Chart",
+            icon: Icon(Icons.list),
+            label: "Attendences",
           ),
 
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "Profile",
-          ),
+         
         ]
         ),
         body: pages[_currentPageIndex],

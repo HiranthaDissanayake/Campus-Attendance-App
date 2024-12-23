@@ -2,7 +2,7 @@ import 'package:attendenz/constants/colors.dart';
 import 'package:attendenz/models/subjectCategory.dart';
 import 'package:attendenz/services/user_services.dart';
 import 'package:attendenz/widgets/absent_card.dart';
-import 'package:attendenz/widgets/line_chart.dart';
+import 'package:attendenz/widgets/pie_chart.dart';
 import 'package:attendenz/widgets/present_absent_card.dart';
 import 'package:flutter/material.dart';
 
@@ -43,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 237, 234, 234),
       body: SafeArea(child: 
         SingleChildScrollView(
 
@@ -56,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 decoration: BoxDecoration(
                   color: MainColor.withOpacity(0.7),
                   borderRadius: const BorderRadius.only(
-                    bottomRight: Radius.circular(130),
+                    bottomRight: Radius.circular(100),
                     topLeft: Radius.circular(50)
                   )
                 ),
@@ -67,12 +68,21 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text("Welcome $username",
-                            style: const TextStyle(
-                            color: Color.fromARGB(255, 254, 253, 253),
-                            fontSize: 22,
-                            fontWeight: FontWeight.w600
-                          ),),
+                          Row(
+                            children: [
+                              Text("Welcome $username ",
+                                style: const TextStyle(
+                                color: Color.fromARGB(255, 254, 253, 253),
+                                fontSize: 22,
+                                fontWeight: FontWeight.w600
+                              ),
+                            ),
+                            Image.asset("assets/waving-hand.png",
+                            width: 30,
+                            fit: BoxFit.cover,
+                            )
+                            ],
+                          ),
                         ],
                       ), 
                     ),
@@ -103,22 +113,26 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
               // line Chart
-              const Padding(padding: 
-                EdgeInsets.all(15),
+              Padding(padding: 
+                const EdgeInsets.all(15),
 
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Daily Attendences", style: TextStyle(
+                    const Text("Daily Attendences", style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w500
                     ),),
 
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
 
-                    LineChartSample(),
+                    Chart(
+                      absentCategoryTotals: widget.absentList,
+                      presentCategoryTotals: widget.presentList,
+                     
+                    )
                   ],
                 ),
               ),
